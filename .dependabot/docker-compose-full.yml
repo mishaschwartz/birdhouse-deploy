@@ -44,7 +44,7 @@ services:
       - source: /dev/kmsg
         target: /dev/kmsg
         permissions: rwm
-    image: gcr.io/cadvisor/cadvisor:v0.54.1
+    image: gcr.io/cadvisor/cadvisor:v0.55.1
     networks:
       default: null
     volumes:
