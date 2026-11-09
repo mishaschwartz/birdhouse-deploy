@@ -1437,7 +1437,7 @@ services:
       PROMETHEUS_DISABLE_CREATED_SERIES: "True"
       PROMETHEUS_LOG_PARSER_CLIENT_PORT: "8000"
       PROXY_LOG_FILE: access_file.log
-    image: marbleclimate/log-parser:v1.1.1
+    image: marbleclimate/log-parser:v1.2.0
     networks:
       default: null
     volumes:
