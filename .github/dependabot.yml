@@ -13,5 +13,3 @@ updates:
       prefix: "[skip jenkins] "
     schedule:
       interval: "quarterly"
-    cooldown:
-      default-days: 7
