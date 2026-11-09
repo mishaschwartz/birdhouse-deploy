@@ -1,0 +1,29 @@
+name: Dependabot update docker PRs
+
+on: pull_request_target
+
+permissions:
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          disable-sudo: true
+          egress-policy: audit
+
+      - name: Fetch Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      - name: Update relevant file
+        run: |
+          echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
+          echo ${{ steps.dependabot-metadata.outputs.previous-version }}
+          echo ${{ steps.dependabot-metadata.outputs.new-version }}
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
