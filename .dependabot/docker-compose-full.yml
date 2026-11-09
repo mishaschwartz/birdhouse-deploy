@@ -2090,7 +2090,7 @@ services:
     environment:
       STAC_ASSET_GENERATOR_TIMEOUT: "200"
       STAC_HOST: http://stac:8000/stac
-    image: ghcr.io/crim-ca/stac-populator:0.0.0
+    image: ghcr.io/crim-ca/stac-populator:0.15.0
     networks:
       default: null
     depends_on:
