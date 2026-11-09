@@ -2229,7 +2229,7 @@ services:
           secret_key: minioadmin
           endpoint: thanos-minio:9000
           insecure: true # use http instead of https
-    image: thanosio/thanos:v0.35.1
+    image: thanosio/thanos:v0.42.5
     networks:
       default: null
     depends_on:
@@ -2274,7 +2274,7 @@ services:
       - --web.route-prefix=/thanos-query
       - --web.external-prefix=/thanos-query
       - --endpoint=thanos-sidecar:19090
-    image: thanosio/thanos:v0.35.1
+    image: thanosio/thanos:v0.42.5
     networks:
       default: null
     depends_on:
@@ -2298,7 +2298,7 @@ services:
           secret_key: minioadmin
           endpoint: thanos-minio:9000
           insecure: true # use http instead of https
-    image: thanosio/thanos:v0.35.1
+    image: thanosio/thanos:v0.42.5
     networks:
       default: null
     user: nobody
