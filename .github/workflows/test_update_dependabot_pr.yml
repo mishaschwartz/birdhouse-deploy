@@ -1,7 +1,7 @@
 name: Dependabot update docker PRs
 
 on: 
-  pull_request_target:
+  pull_request:
     types: [opened, reopened] # TODO: remove reopened
 
 permissions:
