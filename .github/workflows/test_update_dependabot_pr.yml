@@ -34,10 +34,12 @@ jobs:
           FILE="${UPDATE_LOC%:*}"
           VAR_DEFINITION="${UPDATE_LOC##*:export }"
           VAR_PREFIX="${VAR_DEFINITION%_DOCKER=*}"
-          sed "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$FILE" > /tmp/tmp.yml
-          mv /tmp/tmp.yml "$FILE"
+          sed -i "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$FILE"
+          sed "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$FILE"
+          echo sed "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$FILE"
+          cat $FILE
+          echo $FILE
           git diff
-          git status
           echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
           echo ${{ steps.dependabot-metadata.outputs.previous-version }}
           echo ${{ steps.dependabot-metadata.outputs.new-version }}
