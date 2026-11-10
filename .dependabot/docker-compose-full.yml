@@ -2007,7 +2007,7 @@ services:
       CATALOG_URL: http://host.docker.internal/stac/
       ROOT_PATH: /stac-browser/
       SB_catalogUrl: http://host.docker.internal/stac/
-    image: ghcr.io/crim-ca/stac-browser:5.0.0-rc.0-crim
+    image: ghcr.io/crim-ca/stac-browser:5.1.0-rc.0-crim
     networks:
       default: null
     healthcheck:
