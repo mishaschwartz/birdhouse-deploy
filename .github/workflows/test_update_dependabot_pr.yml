@@ -27,6 +27,7 @@ jobs:
         with:
           allow-unsafe-pr-checkout: false
           ref: ${{ github.head_ref }}
+          fetch-depth: 2
 
       - name: Update relevant file
         run: |
