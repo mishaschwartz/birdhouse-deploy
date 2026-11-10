@@ -39,7 +39,6 @@ jobs:
           echo $FILE
           set -x
           git diff
-          git diff master
           git status
           echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
           echo ${{ steps.dependabot-metadata.outputs.previous-version }}
