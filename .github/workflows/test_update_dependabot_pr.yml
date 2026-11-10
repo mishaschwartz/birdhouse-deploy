@@ -20,6 +20,9 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
 
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - name: Update relevant file
         run: |
           UPDATE_LOC="$(grep '^export.*_DOCKER=['\''\"]\{0,1\}${{ steps.dependabot-metadata.outputs.dependency-names }}' birdhouse/components/*/default.env birdhouse/optional-components/*/default.env | head -1)"
