@@ -22,6 +22,13 @@ jobs:
 
       - name: Update relevant file
         run: |
+          UPDATE_LOC="$(grep '^export.*_DOCKER=['\''\"]\{0,1\}${{ steps.dependabot-metadata.outputs.dependency-names }}' birdhouse/components/*/default.env birdhouse/optional-components/*/default.env | head -1)"
+          FILE="${UPDATE_LOC%:*}"
+          VAR_DEFINITION="${UPDATE_LOC##*:export }"
+          VAR_PREFIX="${VAR_DEFINITION%_DOCKER=*}"
+          sed -i "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" $FILE
+          git diff
+          git status
           echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
           echo ${{ steps.dependabot-metadata.outputs.previous-version }}
           echo ${{ steps.dependabot-metadata.outputs.new-version }}
