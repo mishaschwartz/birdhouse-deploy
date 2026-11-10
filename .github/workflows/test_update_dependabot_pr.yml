@@ -29,8 +29,8 @@ jobs:
           FILE="${UPDATE_LOC%:*}"
           VAR_DEFINITION="${UPDATE_LOC##*:export }"
           VAR_PREFIX="${VAR_DEFINITION%_DOCKER=*}"
-          echo sed "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" $FILE
-          sed "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" $FILE
+          sed -h
+          sed -i "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" $FILE
           git diff
           git status
           echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
