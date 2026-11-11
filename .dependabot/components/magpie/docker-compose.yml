@@ -2,4 +2,4 @@ services:
   magpie:
     image: docker.io/pavics/magpie:5.1.2
   postgres-magpie:
-    image: docker.io/library/postgres:9.6
+    image: docker.io/library/postgres:18.6
