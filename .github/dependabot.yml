@@ -3,7 +3,8 @@ version: 2
 updates:
   - package-ecosystem: docker-compose
     directories:
-      - /.dependabot/*/*/
+      - /.dependabot/components/*/
+      - /.dependabot/optional-components/*/
     labels:
       - "ci/docker"
     commit-message:
