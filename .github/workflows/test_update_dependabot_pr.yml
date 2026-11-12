@@ -1,7 +1,7 @@
 name: Dependabot update docker PRs
 
 on: 
-  pull_request_target:
+  pull_request:
     types: [opened, reopened] # TODO: remove reopened
 
 permissions:
@@ -26,11 +26,13 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           allow-unsafe-pr-checkout: false
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
 
       - name: Update relevant file
         run: |
+          git diff --name-only HEAD^
+          exit
           UPDATE_LOC="$(grep '^export.*_DOCKER=['\''\"]\{0,1\}${{ steps.dependabot-metadata.outputs.dependency-names }}' birdhouse/components/*/default.env birdhouse/optional-components/*/default.env | head -1)"
           FILE="${UPDATE_LOC%:*}"
           VAR_DEFINITION="${UPDATE_LOC##*:export }"
