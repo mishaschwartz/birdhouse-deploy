@@ -31,18 +31,14 @@ jobs:
 
       - name: Update relevant file
         run: |
-          git diff --name-only HEAD^
-          exit
-          UPDATE_LOC="$(grep '^export.*_DOCKER=['\''\"]\{0,1\}${{ steps.dependabot-metadata.outputs.dependency-names }}' birdhouse/components/*/default.env birdhouse/optional-components/*/default.env | head -1)"
-          FILE="${UPDATE_LOC%:*}"
-          VAR_DEFINITION="${UPDATE_LOC##*:export }"
-          VAR_PREFIX="${VAR_DEFINITION%_DOCKER=*}"
-          sed -i "s/^\(export ${VAR_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$FILE"
-          git add $FILE
-          git commit -m "dependabot file update"
-          git log 
-          echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
-          echo ${{ steps.dependabot-metadata.outputs.previous-version }}
-          echo ${{ steps.dependabot-metadata.outputs.new-version }}
+          set -x
+          UPDATED_SERVICE="$(git diff ${{ github.base_ref }} --no-color -- .dependabot/ | grep '^-[[:space:]]' -B1 | head -1 | sed 's/^[[:space:]]*\([^:]\{1,\}\):/\1/')"
+          UPDATED_FILE="$(git diff ${{ github.base_ref }} --name-only -- ./.dependabot/)"
+          COMPOSE_FILE="$(echo ${UPDATED_FILE} | sed "s:.*/\(components\|optional-components\)/\([^/]*\)/docker-compose.yml:birdhouse/\1/\2/docker-compose-extra.yml:")"
+          ENV_FILE="${COMPOSE_FILE%/*}/default.env"
+          VARIABLE_PREFIX="$(tail -n+"$(grep -n "^[[:space:]]*${UPDATED_SERVICE}:[[:space:]]*$" "${COMPOSE_FILE}" | head -1 | cut -f1 -d:)" "$COMPOSE_FILE" | grep 'image:' | head -1 | cut -d: -f 2- | sed 's/[[:space:]]*\${\(.*\)_IMAGE}/\1/')"
+          sed -i "s/^\(export ${VARIABLE_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$ENV_FILE"
+          git add "$ENV_FILE"
+          git commit -m "update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
