@@ -32,8 +32,8 @@ jobs:
       - name: Update relevant file
         run: |
           set -x
-          UPDATED_SERVICE="$(git diff ${{ github.base_ref }} --no-color -- .dependabot/ | grep '^-[[:space:]]' -B1 | head -1 | sed 's/^[[:space:]]*\([^:]\{1,\}\):/\1/')"
-          UPDATED_FILE="$(git diff ${{ github.base_ref }} --name-only -- ./.dependabot/)"
+          UPDATED_SERVICE="$(git diff origin/${{ github.base_ref }} HEAD --no-color -- .dependabot/ | grep '^-[[:space:]]' -B1 | head -1 | sed 's/^[[:space:]]*\([^:]\{1,\}\):/\1/')"
+          UPDATED_FILE="$(git diff origin/${{ github.base_ref }} HEAD --name-only -- ./.dependabot/)"
           COMPOSE_FILE="$(echo ${UPDATED_FILE} | sed "s:.*/\(components\|optional-components\)/\([^/]*\)/docker-compose.yml:birdhouse/\1/\2/docker-compose-extra.yml:")"
           ENV_FILE="${COMPOSE_FILE%/*}/default.env"
           VARIABLE_PREFIX="$(tail -n+"$(grep -n "^[[:space:]]*${UPDATED_SERVICE}:[[:space:]]*$" "${COMPOSE_FILE}" | head -1 | cut -f1 -d:)" "$COMPOSE_FILE" | grep 'image:' | head -1 | cut -d: -f 2- | sed 's/[[:space:]]*\${\(.*\)_IMAGE}/\1/')"
