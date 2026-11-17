@@ -37,11 +37,14 @@ jobs:
           ENV_FILE="${COMPOSE_FILE%/*}/default.env"
           VARIABLE_PREFIX="$(tail -n+"$(grep -n "^[[:space:]]*${UPDATED_SERVICE}:[[:space:]]*$" "${COMPOSE_FILE}" | head -1 | cut -f1 -d:)" "$COMPOSE_FILE" | grep 'image:' | head -1 | cut -d: -f 2- | sed 's/[[:space:]]*\${\(.*\)_IMAGE}/\1/')"
           sed -i "s/^\(export ${VARIABLE_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$ENV_FILE"
+          MESSAGE="update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
+          sed -i "/^\[Unreleased\]/,/\[$(cut -d' ' -f1 RELEASE.txt | sed 's/\./\\./g')\]/ s/^\[\/\/\].*\|^##\sChanges/## Changes\n\n- ${MESSAGE}/" CHANGES.md
+          git add "$ENV_FILE" CHANGES.md
           git status
           git diff
           git add "$ENV_FILE"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -m "update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
+          git commit -m "$MESSAGE"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
