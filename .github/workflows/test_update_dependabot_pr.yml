@@ -39,10 +39,9 @@ jobs:
           sed -i "s/^\(export ${VARIABLE_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$ENV_FILE"
           MESSAGE="update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
           sed -i "\:^\[Unreleased\]:,\:\[$(cut -d' ' -f1 RELEASE.txt | sed 's/\./\\./g')\]: s:^\[\/\/\].*\|^##\sChanges:## Changes\n\n-:" CHANGES.md
-          git add "$ENV_FILE" CHANGES.md
           git status
           git diff
-          git add "$ENV_FILE"
+          git add "$ENV_FILE" CHANGES.md
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "$MESSAGE"
