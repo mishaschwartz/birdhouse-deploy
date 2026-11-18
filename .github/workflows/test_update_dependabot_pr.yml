@@ -42,7 +42,7 @@ jobs:
           VARIABLE_PREFIX="$(tail -n+"$(grep -n "^[[:space:]]*${UPDATED_SERVICE}:[[:space:]]*$" "${COMPOSE_FILE}" | head -1 | cut -f1 -d:)" "$COMPOSE_FILE" | grep 'image:' | head -1 | cut -d: -f 2- | sed 's/[[:space:]]*\${\(.*\)_IMAGE}/\1/')"
           PREV_VERSION_REGEX="$(echo ${{ steps.dependabot-metadata.outputs.previous-version }} | sed 's/\./\\./g')"
           NEW_VERSION_REGEX="$(echo ${{ steps.dependabot-metadata.outputs.new-version }} | sed 's/\./\\./g')"
-          sed -i "/^export ${VARIABLE_PREFIX}_VERSION=/ s/${PREV_VERSION_REGEX}/${NEW_VERSION_REGEX}/"
+          sed -i "/^export ${VARIABLE_PREFIX}_VERSION=/ s/${PREV_VERSION_REGEX}/${NEW_VERSION_REGEX}/" "${ENV_FILE}"
           # Describe the version update in the CHANGES.md file
           MESSAGE="update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
           CURRENT_VERSION="$(cut -d' ' -f1 RELEASE.txt | sed 's/\./\\./g')"
