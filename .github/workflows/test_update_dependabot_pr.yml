@@ -40,7 +40,9 @@ jobs:
           ENV_FILE="birdhouse/${UPDATED_FILE}/default.env"
           # Update the environment variable that contains the version information
           VARIABLE_PREFIX="$(tail -n+"$(grep -n "^[[:space:]]*${UPDATED_SERVICE}:[[:space:]]*$" "${COMPOSE_FILE}" | head -1 | cut -f1 -d:)" "$COMPOSE_FILE" | grep 'image:' | head -1 | cut -d: -f 2- | sed 's/[[:space:]]*\${\(.*\)_IMAGE}/\1/')"
-          sed -i "s/^\(export ${VARIABLE_PREFIX}_VERSION=['\''\"]\{0,1\}\)${{ steps.dependabot-metadata.outputs.previous-version }}\(['\''\"]\{0,1\}\)/\1${{ steps.dependabot-metadata.outputs.new-version }}\2/" "$ENV_FILE"
+          PREV_VERSION_REGEX="$(echo ${{ steps.dependabot-metadata.outputs.previous-version }} | sed 's/\./\\./g')"
+          NEW_VERSION_REGEX="$(echo ${{ steps.dependabot-metadata.outputs.new-version }} | sed 's/\./\\./g')"
+          sed -i "/^export ${VARIABLE_PREFIX}_VERSION=/ s/${PREV_VERSION_REGEX}/${NEW_VERSION_REGEX}/"
           # Describe the version update in the CHANGES.md file
           MESSAGE="update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
           CURRENT_VERSION="$(cut -d' ' -f1 RELEASE.txt | sed 's/\./\\./g')"
