@@ -4,6 +4,7 @@ updates:
   - package-ecosystem: docker-compose
     directories:
       - /.dependabot/
+      - /birdhouse/components/*/
     labels:
       - "ci/docker"
     commit-message:
