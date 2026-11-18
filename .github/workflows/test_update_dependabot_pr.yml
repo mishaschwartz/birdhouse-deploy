@@ -30,7 +30,6 @@ jobs:
 
       - name: Update relevant file
         run: |
-          set -x
           # Determine which service was updated by the dependabot PR
           UPDATE_DIFF="$(git diff origin/${{ github.base_ref }} HEAD --no-color -- .dependabot/docker-compose.yml)"
           UPDATED_SERVICE="$(echo "${UPDATE_DIFF}" | grep '^-[[:space:]]' -B1 | head -1 | sed 's/^[[:space:]]*\([^:]\{1,\}\):/\1/')"
@@ -47,7 +46,7 @@ jobs:
           MESSAGE="update ${{ steps.dependabot-metadata.outputs.dependency-names }} from ${{ steps.dependabot-metadata.outputs.previous-version }} to ${{ steps.dependabot-metadata.outputs.new-version }}"
           CURRENT_VERSION="$(cut -d' ' -f1 RELEASE.txt | sed 's/\./\\./g')"
           sed -i "\:^\[Unreleased\]:,\:\[${CURRENT_VERSION}\]: s:^\[\/\/\].*\|^##\sChanges:## Changes\n\n- ${MESSAGE}:" CHANGES.md # if there is a [//] placeholder or ## Changes heading
-          git diff --exit-code CHANGES.md > /dev/null || sed -i "\:\[${CURRENT_VERSION}\]:i ## Changes\n\n- ${MESSAGE}\n" CHANGES.md # otherwise add the changes to the end of the Unreleased section
+          git diff --exit-code CHANGES.md > /dev/null && sed -i "\:\[${CURRENT_VERSION}\]:i ## Changes\n\n- ${MESSAGE}\n" CHANGES.md # otherwise add the changes to the end of the Unreleased section
           git diff
           # Add and commit changes
           git add "$ENV_FILE" CHANGES.md
