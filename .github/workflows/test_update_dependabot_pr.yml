@@ -46,6 +46,7 @@ jobs:
           CURRENT_VERSION="$(cut -d' ' -f1 RELEASE.txt | sed 's/\./\\./g')"
           sed -i "\:^\[Unreleased\]:,\:\[${CURRENT_VERSION}\]: s:^\[\/\/\].*\|^##\sChanges:## Changes\n\n- ${MESSAGE}:" CHANGES.md # if there is a [//] placeholder or ## Changes heading
           git diff --exit-code CHANGES.md > /dev/null || sed -i "\:\[${CURRENT_VERSION}\]:i ## Changes\n\n- ${MESSAGE}\n" CHANGES.md # otherwise add the changes to the end of the Unreleased section
+          git diff
           # Add and commit changes
           git add "$ENV_FILE" CHANGES.md
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
